@@ -24,6 +24,7 @@ import {
 import { usePatients } from "@/hooks/usePatients";
 import { useDentists } from "@/hooks/useStaff";
 import { useCreateLabCase } from "@/hooks/useLabCases";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const JOB_INSTRUCTION_OPTIONS = [
   "Courier Charge",
@@ -73,6 +74,7 @@ interface CreateLabCaseDialogProps {
 }
 
 export function CreateLabCaseDialog({ open, onOpenChange }: CreateLabCaseDialogProps) {
+  const terms = useClinicTerms();
   const { data: patients = [] } = usePatients();
   const { data: dentists = [] } = useDentists();
   const createLabCase = useCreateLabCase();
@@ -171,10 +173,10 @@ export function CreateLabCaseDialog({ open, onOpenChange }: CreateLabCaseDialogP
               )} />
               <FormField control={form.control} name="dentistId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dentist *</FormLabel>
+                  <FormLabel>{terms.clinician} *</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select dentist" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={`Select ${terms.clinician.toLowerCase()}`} /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {dentists.map((d) => (

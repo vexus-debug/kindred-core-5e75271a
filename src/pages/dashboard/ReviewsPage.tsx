@@ -14,10 +14,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const serviceCategories = ["Cleanliness", "Professionalism", "Wait Time", "Pain Management", "Communication", "Overall Experience"];
 
 export default function ReviewsPage() {
+  const terms = useClinicTerms();
   const { data: reviews = [] } = usePatientReviews();
   const { data: patients = [] } = usePatients();
   const { data: dentists = [] } = useDentists();
@@ -145,7 +147,7 @@ export default function ReviewsPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">Dentist</Label>
+              <Label className="text-xs">{terms.clinician}</Label>
               <Select value={form.dentistId} onValueChange={v => setForm(f => ({ ...f, dentistId: v }))}>
                 <SelectTrigger><SelectValue placeholder="Select dentist (optional)" /></SelectTrigger>
                 <SelectContent>

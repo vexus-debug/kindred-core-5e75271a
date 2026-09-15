@@ -9,6 +9,7 @@ import { useCreateDentalChartEntry, useUpdateDentalChartEntry } from "@/hooks/us
 import { useStaff } from "@/hooks/useStaff";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 type ToothCondition = "healthy" | "decayed" | "treated" | "missing" | "crowned" | "impacted" | "rotated" | "fractured" | "sensitive" | "bridged" | "veneer" | "root_canal" | "implant" | "erupting" | "other";
 
@@ -61,6 +62,7 @@ const allConditions: { value: ToothCondition; label: string; color: string }[] =
 ];
 
 export function AddProcedureDialog({ open, onOpenChange, toothNumber, currentStatus, patientId, editEntry }: AddProcedureDialogProps) {
+  const terms = useClinicTerms();
   const [condition, setCondition] = useState<ToothCondition>(currentStatus as ToothCondition || "healthy");
   const [procedure, setProcedure] = useState("");
   const [notes, setNotes] = useState("");
@@ -193,9 +195,9 @@ export function AddProcedureDialog({ open, onOpenChange, toothNumber, currentSta
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Dentist</Label>
+            <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{terms.clinician}</Label>
             <Select value={dentistId} onValueChange={setDentistId}>
-              <SelectTrigger><SelectValue placeholder="Select dentist" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={`Select ${terms.clinician.toLowerCase()}`} /></SelectTrigger>
               <SelectContent>
                 {dentists.map((d: any) => (
                   <SelectItem key={d.id} value={d.id}>{d.full_name}</SelectItem>

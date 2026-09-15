@@ -15,6 +15,7 @@ import { useStaffAllocationBreakdown } from "@/hooks/useRevenueAllocation";
 import { DollarSign, Plus, CheckCircle2, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { format, startOfMonth, endOfMonth } from "date-fns";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const statusStyles: Record<string, string> = {
   pending: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
@@ -33,6 +34,7 @@ const stagger = {
 };
 
 export default function CommissionPayoutsPage() {
+  const terms = useClinicTerms();
   const { data: payouts = [] } = useCommissionPayouts();
   const { data: staffList = [] } = useStaff();
   const { data: staffBreakdown } = useStaffAllocationBreakdown();
@@ -122,7 +124,7 @@ export default function CommissionPayoutsPage() {
             <CardContent className="p-5 flex items-center gap-4">
               <div className="h-11 w-11 rounded-xl bg-blue-500/10 flex items-center justify-center"><Users className="h-5 w-5 text-blue-600" /></div>
               <div>
-                <p className="text-xs font-medium text-muted-foreground">Dentists</p>
+                <p className="text-xs font-medium text-muted-foreground">{terms.clinicianPlural}</p>
                 <p className="text-xl font-bold"><AnimatedCounter value={dentists.length} /></p>
               </div>
             </CardContent>
@@ -142,7 +144,7 @@ export default function CommissionPayoutsPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/20">
-                  <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">Dentist</th>
+                  <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">{terms.clinician}</th>
                   <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider hidden md:table-cell">Period</th>
                   <th className="py-3 px-4 text-right font-medium text-muted-foreground text-xs uppercase tracking-wider">Calculated</th>
                   <th className="py-3 px-4 text-right font-medium text-muted-foreground text-xs uppercase tracking-wider">Paid</th>
@@ -179,9 +181,9 @@ export default function CommissionPayoutsPage() {
           <DialogHeader><DialogTitle>New Commission Payout</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1">
-              <Label className="text-xs">Dentist *</Label>
+              <Label className="text-xs">{terms.clinician} *</Label>
               <Select value={form.staff_id} onValueChange={handleStaffSelect}>
-                <SelectTrigger><SelectValue placeholder="Select dentist" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder={`Select ${terms.clinician.toLowerCase()}`} /></SelectTrigger>
                 <SelectContent>
                   {dentists.map((d: any) => <SelectItem key={d.id} value={d.id}>{d.full_name}</SelectItem>)}
                 </SelectContent>

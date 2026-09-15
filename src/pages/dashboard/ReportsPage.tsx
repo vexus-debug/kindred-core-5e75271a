@@ -18,6 +18,7 @@ import { ProfitableTreatmentsCard } from "@/components/dashboard/reports/Profita
 import { ChairUtilizationCard } from "@/components/dashboard/reports/ChairUtilizationCard";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const COLORS = [
   "hsl(185, 72%, 32%)",
@@ -57,6 +58,7 @@ const tooltipStyle = {
 };
 
 export default function ReportsPage() {
+  const terms = useClinicTerms();
   const [dateFrom, setDateFrom] = useState<Date>(subMonths(new Date(), 5));
   const [dateTo, setDateTo]     = useState<Date>(new Date());
 
@@ -282,13 +284,13 @@ export default function ReportsPage() {
             <CardHeader className="pb-2 border-b border-border/40">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-[15px] font-semibold">Dentist Performance</CardTitle>
+                  <CardTitle className="text-[15px] font-semibold">{terms.clinician} Performance</CardTitle>
                   <CardDescription className="text-xs">Appointments & revenue this month</CardDescription>
                 </div>
                 <Button
                   variant="ghost" size="sm"
                   className="text-xs h-7 gap-1 text-muted-foreground hover:text-foreground"
-                  onClick={() => downloadCSV(dentistData.map((d) => ({ Dentist: d.name, Appointments: d.appointments, Revenue: d.revenue })), "dentist-performance.csv")}
+                  onClick={() => downloadCSV(dentistData.map((d) => ({ [terms.clinician]: d.name, Appointments: d.appointments, Revenue: d.revenue })), "dentist-performance.csv")}
                 >
                   <Download className="h-3 w-3" />CSV
                 </Button>

@@ -8,6 +8,7 @@ import { useTreatments } from "@/hooks/useTreatments";
 import { useStaff } from "@/hooks/useStaff";
 import { useCreateAppointment } from "@/hooks/useAppointments";
 import { format } from "date-fns";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 interface WalkInDialogProps {
   open: boolean;
@@ -15,6 +16,7 @@ interface WalkInDialogProps {
 }
 
 export function WalkInDialog({ open, onOpenChange }: WalkInDialogProps) {
+  const terms = useClinicTerms();
   const [patientId, setPatientId] = useState("");
   const [treatmentId, setTreatmentId] = useState("");
   const [staffId, setStaffId] = useState("");
@@ -78,9 +80,9 @@ export function WalkInDialog({ open, onOpenChange }: WalkInDialogProps) {
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Dentist *</Label>
+            <Label>{terms.clinician} *</Label>
             <Select value={staffId} onValueChange={setStaffId}>
-              <SelectTrigger><SelectValue placeholder="Select dentist" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={`Select ${terms.clinician.toLowerCase()}`} /></SelectTrigger>
               <SelectContent>
                 {dentists.map((s) => (
                   <SelectItem key={s.id} value={s.id}>{s.full_name}</SelectItem>
