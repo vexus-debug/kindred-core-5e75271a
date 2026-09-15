@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EyeRecordsTab } from "@/components/dashboard/eye/EyeRecordsTab";
+import { getClinicTerms } from "@/config/clinicTerminology";
 
 const statusStyles: Record<string, string> = {
   paid: "bg-emerald-100 text-emerald-700",
