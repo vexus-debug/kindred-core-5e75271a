@@ -628,7 +628,7 @@ export default function PatientProfilePage() {
             <Button className="bg-secondary hover:bg-secondary/90" disabled={uploadImage.isPending || !selectedFile} onClick={() => {
               if (!selectedFile || !patientId) return;
               uploadImage.mutate({ file: selectedFile, patientId, imageType: imageForm.imageType, toothNumber: imageForm.toothNumber ? Number(imageForm.toothNumber) : undefined, description: imageForm.description, userId: user?.id }, {
-                onSuccess: () => { setImageDialogOpen(false); setSelectedFile(null); setImageForm({ imageType: "x-ray", toothNumber: "", description: "" }); },
+                onSuccess: () => { setImageDialogOpen(false); setSelectedFile(null); setImageForm({ imageType: terms.defaultImageType, toothNumber: "", description: "" }); },
               });
             }}>{uploadImage.isPending ? "Uploading..." : "Upload"}</Button>
           </DialogFooter>
