@@ -250,7 +250,7 @@ export default function PatientProfilePage() {
         {/* Dental History */}
         <TabsContent value="history" className="mt-4 space-y-4">
           {/* Dental Chart Summary */}
-          {dentalEntries.length > 0 && (
+          {terms.showDentalChart && dentalEntries.length > 0 && (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Dental Chart Findings</CardTitle>
