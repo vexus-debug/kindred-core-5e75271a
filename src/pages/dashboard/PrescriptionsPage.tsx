@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/dashboard/PageHeader";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const stagger = {
   container: { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } },
@@ -15,6 +16,7 @@ const stagger = {
 };
 
 export default function PrescriptionsPage() {
+  const terms = useClinicTerms();
   const [rxOpen, setRxOpen] = useState(false);
   const { data: prescriptions = [], isLoading } = usePrescriptions();
 
@@ -25,15 +27,15 @@ export default function PrescriptionsPage() {
         description="Digital prescriptions and medication records"
         tutorial={{
           title: "Prescriptions — How to Use",
-          description: "Create, manage, and track digital prescriptions issued to patients after their dental visit.",
+          description: terms.prescriptionsHelp,
           steps: [
             {
               title: "View existing prescriptions",
-              description: "All issued prescriptions are listed here with the patient's name, prescribing dentist, date, and status. Click any row to see the full prescription details including medications.",
+              description: `All issued prescriptions are listed here with the patient's name, prescribing ${terms.clinician.toLowerCase()}, date, and status. Click any row to see the full prescription details including medications.`,
             },
             {
               title: "Create a new prescription",
-              description: "Click 'New Prescription'. Select the patient and the prescribing dentist. Add a diagnosis or reason for the prescription.",
+              description: `Click 'New Prescription'. Select the patient and the prescribing ${terms.clinician.toLowerCase()}. Add a diagnosis or reason for the prescription.`,
               tip: "Always link prescriptions to a patient so they appear in the patient's complete medical history.",
             },
             {
