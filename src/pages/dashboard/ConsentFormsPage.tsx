@@ -14,6 +14,8 @@ import { useOrg } from "@/hooks/useOrg";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { consentTemplateSeeds } from "@/data/consentTemplates";
+import { eyeConsentTemplateSeeds } from "@/data/consentTemplatesEye";
+import { getClinicTerms } from "@/config/clinicTerminology";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -42,6 +44,8 @@ export default function ConsentFormsPage() {
   const { currentOrg } = useOrg();
   const orgRole = currentOrg?.role || "";
   const isAdmin = orgRole === "owner" || orgRole === "admin";
+  const terms = getClinicTerms(currentOrg?.clinic_type);
+  const templateSeeds = currentOrg?.clinic_type === "eye" ? eyeConsentTemplateSeeds : consentTemplateSeeds;
   const createTemplate = useCreateConsentFormTemplate();
   const createForm = useCreatePatientConsentForm();
   const signForm = useSignConsentForm();
@@ -62,7 +66,7 @@ export default function ConsentFormsPage() {
   const [consentForm, setConsentForm] = useState({ patientId: "", templateId: "", title: "", content: "" });
 
   const [importDialogOpen, setImportDialogOpen] = useState(false);
-  const [importKeys, setImportKeys] = useState<string[]>(consentTemplateSeeds.map(t => t.key));
+  const [importKeys, setImportKeys] = useState<string[]>([]);
   const [importing, setImporting] = useState(false);
   const [scanning, setScanning] = useState(false);
 
@@ -73,7 +77,7 @@ export default function ConsentFormsPage() {
   };
 
   const handleImportTemplates = async () => {
-    const chosen = consentTemplateSeeds.filter(
+    const chosen = templateSeeds.filter(
       t => importKeys.includes(t.key) && !existingTitles.has(t.title.toLowerCase()),
     );
     if (chosen.length === 0) {
@@ -279,7 +283,7 @@ export default function ConsentFormsPage() {
                 <p className="text-sm text-muted-foreground">No templates yet.</p>
                 {isAdmin && (
                   <Button size="sm" variant="outline" onClick={() => setImportDialogOpen(true)}>
-                    <Library className="mr-2 h-4 w-4" /> Import the standard dental library
+                    <Library className="mr-2 h-4 w-4" /> {terms.consentLibraryLabel}
                   </Button>
                 )}
               </CardContent>
@@ -417,11 +421,11 @@ export default function ConsentFormsPage() {
         <DialogContent className="max-w-lg">
           <DialogHeader><DialogTitle>Import Consent Templates</DialogTitle></DialogHeader>
           <p className="text-xs text-muted-foreground">
-            Standard dental consent forms with placeholders you can edit after importing. Templates you already have are skipped.
+            {terms.consentLibraryDescription}
           </p>
           <ScrollArea className="max-h-[50vh] pr-3">
             <div className="space-y-2">
-              {consentTemplateSeeds.map(t => {
+              {templateSeeds.map(t => {
                 const exists = existingTitles.has(t.title.toLowerCase());
                 return (
                   <label

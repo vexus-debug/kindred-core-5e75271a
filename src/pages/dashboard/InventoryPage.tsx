@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { useInventory, useAddInventoryItem, useUpdateInventoryStock, useDeleteInventoryItem } from "@/hooks/useInventory";
 import { EditInventoryDialog } from "@/components/dashboard/EditInventoryDialog";
 import { useOrg } from "@/hooks/useOrg";
+import { getClinicTerms } from "@/config/clinicTerminology";
 import type { InventoryItem } from "@/hooks/useInventory";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { TableSkeleton } from "@/components/dashboard/TableSkeleton";
@@ -117,7 +118,7 @@ export default function InventoryPage() {
         description={`${inventory.length} items tracked`}
         tutorial={{
           title: "Inventory — How to Use",
-          description: "Track dental supplies, consumables, and equipment to avoid running out during procedures.",
+          description: getClinicTerms(currentOrg?.clinic_type).inventoryHelp,
           steps: [
             {
               title: "View all inventory items",
