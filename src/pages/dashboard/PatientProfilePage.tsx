@@ -449,7 +449,7 @@ export default function PatientProfilePage() {
                   )}
 
                   {/* Dental Chart findings for this patient */}
-                  {dentalEntries.length > 0 && (
+                  {terms.showDentalChart && dentalEntries.length > 0 && (
                     <div className="p-2 rounded-md bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800">
                       <span className="text-xs font-bold text-purple-700 dark:text-purple-400">Dental Chart</span>
                       <div className="mt-1 space-y-1">
