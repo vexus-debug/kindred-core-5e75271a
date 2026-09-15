@@ -138,7 +138,7 @@ export default function PatientProfilePage() {
       <Tabs defaultValue="overview">
         <TabsList className="flex-wrap h-auto gap-1" data-tour="patients-detail-tabs">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="history">Dental History</TabsTrigger>
+          <TabsTrigger value="history">{terms.historyTab}</TabsTrigger>
           <TabsTrigger value="plans">Treatment Plans</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="prescriptions">Prescriptions</TabsTrigger>
