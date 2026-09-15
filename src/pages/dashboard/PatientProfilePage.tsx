@@ -617,7 +617,9 @@ export default function PatientProfilePage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1"><Label className="text-xs">Tooth #</Label><Input type="number" value={imageForm.toothNumber} onChange={e => setImageForm(f => ({ ...f, toothNumber: e.target.value }))} /></div>
+              {terms.showDentalChart && (
+                <div className="space-y-1"><Label className="text-xs">{terms.siteLabel}</Label><Input type="number" value={imageForm.toothNumber} onChange={e => setImageForm(f => ({ ...f, toothNumber: e.target.value }))} /></div>
+              )}
             </div>
             <div className="space-y-1"><Label className="text-xs">Supporting Note / Description</Label><Textarea value={imageForm.description} onChange={e => setImageForm(f => ({ ...f, description: e.target.value }))} rows={2} placeholder="Describe findings, context for this image..." /></div>
           </div>
