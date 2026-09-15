@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import { toast } from "@/hooks/use-toast";
 import { ProductImageUploader } from "@/components/dashboard/ProductImageUploader";
 import { useOrg } from "@/hooks/useOrg";
+import { getClinicTerms } from "@/config/clinicTerminology";
 
 const productCategories = ["General", "Oral Care", "Whitening", "Orthodontics", "Accessories", "Medication"];
 const orderStatuses = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
@@ -332,11 +333,11 @@ export default function ShopManagementPage() {
           <div className="space-y-3">
             <div className="space-y-1">
               <Label className="text-xs">Name *</Label>
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Electric Toothbrush Pro" />
+              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={getClinicTerms(currentOrg?.clinic_type).shopProductNamePlaceholder} />
             </div>
             <div className="space-y-1">
               <Label className="text-xs">Description</Label>
-              <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="High-quality dental care product..." className="min-h-[60px]" />
+              <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={getClinicTerms(currentOrg?.clinic_type).shopProductDescriptionPlaceholder} className="min-h-[60px]" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">

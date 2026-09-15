@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOrg } from "@/hooks/useOrg";
+import { getClinicTerms } from "@/config/clinicTerminology";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,7 @@ export default function PatientsPage() {
             },
             {
               title: "Open a patient profile",
-              description: "Click any patient row or card to open their full profile. You'll see appointments, invoices, dental charts, prescriptions, and more — all in one place.",
+              description: getClinicTerms(currentOrg?.clinic_type).patientProfileHelp,
             },
             {
               title: "Quick actions per patient",

@@ -20,6 +20,7 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const stagger = {
   container: { hidden: {}, visible: { transition: { staggerChildren: 0.04 } } },
@@ -46,6 +47,7 @@ function formatCurrency(amount: number) {
 }
 
 export default function TreatmentsPage() {
+  const terms = useClinicTerms();
   const [search, setSearch] = useState("");
   const { data: treatments = [], isLoading } = useTreatments();
   const deleteTreatment = useDeleteTreatment();
@@ -385,7 +387,7 @@ export default function TreatmentsPage() {
                         </Select>
                       </div>
                       <div className="col-span-2">
-                        <Input className="h-8 text-xs" placeholder="Tooth #" value={item.tooth_number} onChange={(e) => updatePlanLineItem(idx, "tooth_number", e.target.value)} />
+                        <Input className="h-8 text-xs" placeholder={terms.siteLabel} value={item.tooth_number} onChange={(e) => updatePlanLineItem(idx, "tooth_number", e.target.value)} />
                       </div>
                       <div className="col-span-2">
                         <Input type="number" className="h-8 text-xs" placeholder="Cost" value={item.estimated_cost} onChange={(e) => updatePlanLineItem(idx, "estimated_cost", parseFloat(e.target.value) || 0)} />
@@ -447,7 +449,7 @@ export default function TreatmentsPage() {
                           <div>
                             <p className="text-sm font-medium">{item.description}</p>
                             <div className="flex gap-2 text-[10px] text-muted-foreground mt-0.5">
-                              {item.tooth_number && <span>Tooth: {item.tooth_number}</span>}
+                              {item.tooth_number && <span>{terms.sitePrefix}: {item.tooth_number}</span>}
                               {item.scheduled_date && <span>Scheduled: {item.scheduled_date}</span>}
                               <span>{formatCurrency(item.estimated_cost)}</span>
                             </div>

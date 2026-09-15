@@ -20,6 +20,7 @@ import { usePatients } from "@/hooks/usePatients";
 import { useDentists } from "@/hooks/useStaff";
 import { useTreatments } from "@/hooks/useTreatments";
 import { useCreateLabOrder } from "@/hooks/useLabOrders";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const labWorkTypes = [
   "PFM Crown", "Zirconia Crown", "E-max Crown",
@@ -52,6 +53,7 @@ interface CreateLabOrderDialogProps {
 }
 
 export function CreateLabOrderDialog({ open, onOpenChange }: CreateLabOrderDialogProps) {
+  const terms = useClinicTerms();
   const { data: patients = [] } = usePatients();
   const { data: dentists = [] } = useDentists();
   const { data: treatments = [] } = useTreatments();
@@ -176,10 +178,10 @@ export function CreateLabOrderDialog({ open, onOpenChange }: CreateLabOrderDialo
             <div className="grid gap-3 sm:grid-cols-2">
               <FormField control={form.control} name="dentistId" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Dentist *</FormLabel>
+                  <FormLabel>{terms.clinician} *</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Select dentist" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={`Select ${terms.clinician.toLowerCase()}`} /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {dentists.map((d) => (

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useUpdateAppointment, type AppointmentRow } from "@/hooks/useAppointments";
 import { useDentists } from "@/hooks/useStaff";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const statusOptions = ["scheduled", "in-progress", "completed", "cancelled"];
 const chairs = ["Chair 1", "Chair 2", "Chair 3"];
@@ -19,6 +20,7 @@ interface AppointmentDetailDialogProps {
 }
 
 export function AppointmentDetailDialog({ appointment, open, onOpenChange }: AppointmentDetailDialogProps) {
+  const terms = useClinicTerms();
   const updateAppointment = useUpdateAppointment();
   const { data: dentists = [] } = useDentists();
   const [editing, setEditing] = useState(false);
@@ -96,7 +98,7 @@ export function AppointmentDetailDialog({ appointment, open, onOpenChange }: App
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label className="text-xs">Dentist</Label>
+                <Label className="text-xs">{terms.clinician}</Label>
                 <Select value={staffId} onValueChange={setStaffId}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -122,7 +124,7 @@ export function AppointmentDetailDialog({ appointment, open, onOpenChange }: App
         ) : (
           <div className="space-y-3 text-sm">
             <div className="flex justify-between"><span className="text-muted-foreground">Patient</span><span className="font-medium">{appointment.patients ? `${appointment.patients.first_name} ${appointment.patients.last_name}` : "Unknown"}</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Dentist</span><span>{appointment.staff?.full_name || "Unknown"}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">{terms.clinician}</span><span>{appointment.staff?.full_name || "Unknown"}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Treatment</span><span>{appointment.treatments?.name || "N/A"}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Date</span><span>{appointment.appointment_date}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Time</span><span>{appointment.appointment_time}</span></div>

@@ -19,6 +19,7 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useOrg } from "@/hooks/useOrg";
+import { useClinicTerms } from "@/hooks/useClinicTerms";
 
 const defaultChairs = ["Chair 1", "Chair 2", "Chair 3"];
 const defaultSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"];
@@ -82,6 +83,7 @@ function useMonthAppointments(month: Date) {
 }
 
 export default function AppointmentsPage() {
+  const terms = useClinicTerms();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [bookOpen, setBookOpen] = useState(false);
   const [walkInOpen, setWalkInOpen] = useState(false);
@@ -360,7 +362,7 @@ export default function AppointmentsPage() {
                       <tr className="border-b bg-muted/20">
                         <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">Time</th>
                         <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">Patient</th>
-                        <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider hidden md:table-cell">Dentist</th>
+                        <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider hidden md:table-cell">{terms.clinician}</th>
                         <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider hidden md:table-cell">Chair</th>
                         <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">Treatment</th>
                         <th className="py-3 px-4 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">Status</th>

@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EyeRecordsTab } from "@/components/dashboard/eye/EyeRecordsTab";
+import { getClinicTerms } from "@/config/clinicTerminology";
 
 const statusStyles: Record<string, string> = {
   paid: "bg-emerald-100 text-emerald-700",
@@ -58,7 +59,11 @@ export default function PatientProfilePage() {
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [docDialogOpen, setDocDialogOpen] = useState(false);
   const [noteForm, setNoteForm] = useState({ subjective: "", objective: "", assessment: "", plan: "" });
-  const [imageForm, setImageForm] = useState({ imageType: "x-ray", toothNumber: "", description: "" });
+  const [imageForm, setImageForm] = useState(() => ({
+    imageType: getClinicTerms(currentOrg?.clinic_type).defaultImageType,
+    toothNumber: "",
+    description: "",
+  }));
   const [docForm, setDocForm] = useState({ title: "", category: "other", notes: "" });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedDocFile, setSelectedDocFile] = useState<File | null>(null);
@@ -66,6 +71,7 @@ export default function PatientProfilePage() {
   const canViewClinical = roles.some(r => ["admin", "dentist", "hygienist"].includes(r)) || ["owner", "admin", "dentist", "hygienist"].includes(orgRole);
   const canEditClinical = roles.some(r => ["admin", "dentist", "hygienist"].includes(r)) || ["owner", "admin", "dentist", "hygienist"].includes(orgRole);
   const isEyeClinic = currentOrg?.clinic_type === "eye";
+  const terms = getClinicTerms(currentOrg?.clinic_type);
 
   const { data: patient, isLoading } = usePatientDetail(patientId);
   const { data: visits = [] } = usePatientVisits(patientId);
@@ -132,7 +138,7 @@ export default function PatientProfilePage() {
       <Tabs defaultValue="overview">
         <TabsList className="flex-wrap h-auto gap-1" data-tour="patients-detail-tabs">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="history">Dental History</TabsTrigger>
+          <TabsTrigger value="history">{terms.historyTab}</TabsTrigger>
           <TabsTrigger value="plans">Treatment Plans</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
           <TabsTrigger value="prescriptions">Prescriptions</TabsTrigger>
@@ -244,7 +250,7 @@ export default function PatientProfilePage() {
         {/* Dental History */}
         <TabsContent value="history" className="mt-4 space-y-4">
           {/* Dental Chart Summary */}
-          {dentalEntries.length > 0 && (
+          {terms.showDentalChart && dentalEntries.length > 0 && (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Dental Chart Findings</CardTitle>
@@ -443,7 +449,7 @@ export default function PatientProfilePage() {
                   )}
 
                   {/* Dental Chart findings for this patient */}
-                  {dentalEntries.length > 0 && (
+                  {terms.showDentalChart && dentalEntries.length > 0 && (
                     <div className="p-2 rounded-md bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800">
                       <span className="text-xs font-bold text-purple-700 dark:text-purple-400">Dental Chart</span>
                       <div className="mt-1 space-y-1">
@@ -578,7 +584,7 @@ export default function PatientProfilePage() {
           <DialogHeader><DialogTitle>Add SOAP Note</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1"><Label className="text-xs font-semibold text-blue-700">S — Patient Complaint</Label><Textarea value={noteForm.subjective} onChange={e => setNoteForm(f => ({ ...f, subjective: e.target.value }))} rows={2} placeholder="Patient complaints, symptoms, chief concern..." /></div>
-            <div className="space-y-1"><Label className="text-xs font-semibold text-green-700">O — Clinical Findings</Label><Textarea value={noteForm.objective} onChange={e => setNoteForm(f => ({ ...f, objective: e.target.value }))} rows={2} placeholder="Clinical exam, vitals, dental chart findings..." /></div>
+            <div className="space-y-1"><Label className="text-xs font-semibold text-green-700">O — Clinical Findings</Label><Textarea value={noteForm.objective} onChange={e => setNoteForm(f => ({ ...f, objective: e.target.value }))} rows={2} placeholder={terms.showDentalChart ? "Clinical exam, vitals, dental chart findings..." : "Clinical exam, vitals, examination findings..."} /></div>
             <div className="space-y-1"><Label className="text-xs font-semibold text-amber-700">A — Diagnosis</Label><Textarea value={noteForm.assessment} onChange={e => setNoteForm(f => ({ ...f, assessment: e.target.value }))} rows={2} placeholder="Diagnosis, differential diagnosis..." /></div>
             <div className="space-y-1"><Label className="text-xs font-semibold text-red-700">P — Treatment Plan</Label><Textarea value={noteForm.plan} onChange={e => setNoteForm(f => ({ ...f, plan: e.target.value }))} rows={2} placeholder="Treatment plan, prescriptions, follow-up..." /></div>
           </div>
@@ -605,14 +611,15 @@ export default function PatientProfilePage() {
                 <Select value={imageForm.imageType} onValueChange={v => setImageForm(f => ({ ...f, imageType: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="x-ray">X-Ray</SelectItem>
-                    <SelectItem value="intra-oral">Intra-oral</SelectItem>
-                    <SelectItem value="extra-oral">Extra-oral</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    {terms.imageTypes.map(t => (
+                      <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1"><Label className="text-xs">Tooth #</Label><Input type="number" value={imageForm.toothNumber} onChange={e => setImageForm(f => ({ ...f, toothNumber: e.target.value }))} /></div>
+              {terms.showDentalChart && (
+                <div className="space-y-1"><Label className="text-xs">{terms.siteLabel}</Label><Input type="number" value={imageForm.toothNumber} onChange={e => setImageForm(f => ({ ...f, toothNumber: e.target.value }))} /></div>
+              )}
             </div>
             <div className="space-y-1"><Label className="text-xs">Supporting Note / Description</Label><Textarea value={imageForm.description} onChange={e => setImageForm(f => ({ ...f, description: e.target.value }))} rows={2} placeholder="Describe findings, context for this image..." /></div>
           </div>
@@ -621,7 +628,7 @@ export default function PatientProfilePage() {
             <Button className="bg-secondary hover:bg-secondary/90" disabled={uploadImage.isPending || !selectedFile} onClick={() => {
               if (!selectedFile || !patientId) return;
               uploadImage.mutate({ file: selectedFile, patientId, imageType: imageForm.imageType, toothNumber: imageForm.toothNumber ? Number(imageForm.toothNumber) : undefined, description: imageForm.description, userId: user?.id }, {
-                onSuccess: () => { setImageDialogOpen(false); setSelectedFile(null); setImageForm({ imageType: "x-ray", toothNumber: "", description: "" }); },
+                onSuccess: () => { setImageDialogOpen(false); setSelectedFile(null); setImageForm({ imageType: terms.defaultImageType, toothNumber: "", description: "" }); },
               });
             }}>{uploadImage.isPending ? "Uploading..." : "Upload"}</Button>
           </DialogFooter>
