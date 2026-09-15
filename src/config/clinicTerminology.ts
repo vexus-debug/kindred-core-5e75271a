@@ -28,6 +28,9 @@ export interface ClinicTerms {
   patientProfileHelp: string;
   shopProductNamePlaceholder: string;
   shopProductDescriptionPlaceholder: string;
+  /** Label for the treating clinician */
+  clinician: string;
+  clinicianPlural: string;
 }
 
 const dentalTerms: ClinicTerms = {
@@ -53,6 +56,8 @@ const dentalTerms: ClinicTerms = {
     "Click any patient row or card to open their full profile. You'll see appointments, invoices, dental charts, prescriptions, and more — all in one place.",
   shopProductNamePlaceholder: "Electric Toothbrush Pro",
   shopProductDescriptionPlaceholder: "High-quality dental care product...",
+  clinician: "Dentist",
+  clinicianPlural: "Dentists",
 };
 
 const eyeTerms: ClinicTerms = {
@@ -81,6 +86,8 @@ const eyeTerms: ClinicTerms = {
     "Click any patient row or card to open their full profile. You'll see appointments, invoices, eye records, optical prescriptions, and more — all in one place.",
   shopProductNamePlaceholder: "Anti-Glare Single Vision Lens",
   shopProductDescriptionPlaceholder: "High-quality eye care product...",
+  clinician: "Optometrist",
+  clinicianPlural: "Optometrists",
 };
 
 const genericTerms: ClinicTerms = {
@@ -107,6 +114,8 @@ const genericTerms: ClinicTerms = {
     "Click any patient row or card to open their full profile. You'll see appointments, invoices, clinical records, prescriptions, and more — all in one place.",
   shopProductNamePlaceholder: "Product name",
   shopProductDescriptionPlaceholder: "High-quality care product...",
+  clinician: "Clinician",
+  clinicianPlural: "Clinicians",
 };
 
 export function getClinicTerms(clinicType?: string | null): ClinicTerms {
