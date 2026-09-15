@@ -59,7 +59,11 @@ export default function PatientProfilePage() {
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [docDialogOpen, setDocDialogOpen] = useState(false);
   const [noteForm, setNoteForm] = useState({ subjective: "", objective: "", assessment: "", plan: "" });
-  const [imageForm, setImageForm] = useState({ imageType: "x-ray", toothNumber: "", description: "" });
+  const [imageForm, setImageForm] = useState(() => ({
+    imageType: getClinicTerms(currentOrg?.clinic_type).defaultImageType,
+    toothNumber: "",
+    description: "",
+  }));
   const [docForm, setDocForm] = useState({ title: "", category: "other", notes: "" });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedDocFile, setSelectedDocFile] = useState<File | null>(null);
