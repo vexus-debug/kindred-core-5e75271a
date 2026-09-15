@@ -611,10 +611,9 @@ export default function PatientProfilePage() {
                 <Select value={imageForm.imageType} onValueChange={v => setImageForm(f => ({ ...f, imageType: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="x-ray">X-Ray</SelectItem>
-                    <SelectItem value="intra-oral">Intra-oral</SelectItem>
-                    <SelectItem value="extra-oral">Extra-oral</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    {terms.imageTypes.map(t => (
+                      <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
